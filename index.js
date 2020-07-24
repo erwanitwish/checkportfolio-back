@@ -16,6 +16,8 @@ app.get("/", (request, response) => {
   response.send("Bienvenue sur mon API <3");
 });
 
+// PROJECTS
+
 app.get("/project", (req, res) => {
   connection.query("SELECT * FROM project", (err, results) => {
     if (err) {
@@ -70,6 +72,36 @@ app.delete("/project/:id", (req, res) => {
     if (err) {
       res.status(500).json({
         message: "erreur",
+        error: err,
+      });
+    } else {
+      res.sendStatus(201);
+    }
+  });
+});
+
+// BLOG
+
+app.get("/post", (req, res) => {
+  connection.query("SELECT * FROM post", (err, results) => {
+    if (err) {
+      res.status(500).json({
+        message: "Erreur lors de l'affichage de vos données",
+        error: err,
+      });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.post("/post", (req, res) => {
+  const formData = req.body;
+  connection.query("INSERT INTO post SET ?", formData, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        message: "Erreur lors de l'ajout d'un article",
         error: err,
       });
     } else {
